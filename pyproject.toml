@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "pytest-atf"
+version = "0.1.0"
+description = ""
+authors = ["musikid <musikid@outlook.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+pytest = ">=6.2"
+
+[tool.poetry.dev-dependencies]
+autopep8 = "^1.6.0"
+pytest = ">=6.2"
+
+[tool.poetry.plugins."pytest11"]
+atf = "pytest_atf.plugin"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
