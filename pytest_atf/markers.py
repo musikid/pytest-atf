@@ -11,13 +11,10 @@ class User(Enum):
         return self.value
 
 
-T = TypeVar("T")
-
-
 class ATFMarker(NamedTuple):
     metadata_key: str
     description: str
-    type: Type[T] | Sequence[Type[T]]
+    type: Type | Sequence[Type]
 
 
 atf_markers = {
