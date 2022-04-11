@@ -40,7 +40,7 @@ def parse_args(args: Optional[Sequence[str]] = None):
         "-r",
         dest="resfile",
         action="store",
-        type=FileType("w"),
+        type=Path,
         metavar="resfile",
         help="""Specifies the file that will receive the test case result. 
     If not specified, the test case prints its results
@@ -57,13 +57,14 @@ def parse_args(args: Optional[Sequence[str]] = None):
         action="store",
         type=lambda p: Path(p).absolute(),
         metavar="srcdir",
+        default=getcwd(),
         help="""The path to the directory where the test program is located. 
                                  This is needed in all cases, except when the test program is being executed from the current directory.
                                  The test program will use this path to locate any helper data files or utilities.""",
     )
     test_case_group.add_argument(
         "-v",
-        dest="vars",
+        dest="config_vars",
         action=EnvironParserAction,
         help="Sets the configuration variable var to the value value.",
         metavar="var=value",

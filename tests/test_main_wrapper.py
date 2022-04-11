@@ -42,12 +42,12 @@ def test_exclusive_mutual_flag():
 
 def test_vars_parse():
     actual = parse_args(["-v", "fake=yes", "-v", "another=yes", "stub_test_case"])
-    assert actual.vars.get("fake") == "yes"
-    assert actual.vars.get("another") == "yes"
+    assert actual.config_vars.get("fake") == "yes"
+    assert actual.config_vars.get("another") == "yes"
 
     # Test spaces
     actual = parse_args(["-v", "fake=alotof yes", "stub_test_case"])
-    assert actual.vars.get("fake") == "alotof yes"
+    assert actual.config_vars.get("fake") == "alotof yes"
 
 
 def test_list_tests(pytester: Pytester):
