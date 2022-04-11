@@ -138,6 +138,7 @@ def get_test_metadata(test: pytest.Item) -> dict[str, Any]:
 
 
 def format_metadata(metadata: dict[str, Any]) -> str:
+    """Return a metadata string in ATF format."""
     s = []
     for prop, value in metadata.items():
         value = (
@@ -146,8 +147,8 @@ def format_metadata(metadata: dict[str, Any]) -> str:
             else str(value)
         )
         value = value.replace("\n", "\t")
-        s.append(f"{prop}: {value}")
-    return "\n".join(s) + "\n"
+        s.append(f"{prop}: {value}\n")
+    return "".join(s)
 
 
 METADATA_HEADER = 'Content-Type: application/X-atf-tp; version="1"\n\n'
