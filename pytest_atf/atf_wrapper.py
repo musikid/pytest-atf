@@ -1,8 +1,9 @@
 from contextlib import redirect_stderr, redirect_stdout
 from io import StringIO
+from os import environ, getcwd
 from pathlib import Path
-from typing import Any, Sequence
-from argparse import *
+from typing import Any, Optional, Sequence
+from argparse import ArgumentParser, Action, Namespace
 
 import pytest
 from pytest_atf.markers import atf_markers
@@ -23,7 +24,7 @@ class EnvironParserAction(Action):
         setattr(namespace, self.dest, env)
 
 
-def parse_args(args: Sequence[str] = None):
+def parse_args(args: Optional[Sequence[str]] = None):
     parser = ArgumentParser(description="Process ATF arguments")
 
     list_tests_group = parser.add_argument_group()
@@ -98,6 +99,8 @@ class PytestError(Exception):
 
 
 def list_tests():
+    """Returns all the tests available in the directory."""
+
     class CollectPlugin:
         items: list[pytest.Item] = []
 
@@ -154,7 +157,7 @@ def format_metadata(metadata: dict[str, Any]) -> str:
 METADATA_HEADER = 'Content-Type: application/X-atf-tp; version="1"\n\n'
 
 
-def atf_main_wrapper(args: Sequence[str] = None):
+def atf_main_wrapper(args: Optional[Sequence[str]] = None):
     parsed_args = parse_args(args)
     if parsed_args.list_tests:
         tests = list_tests()
@@ -163,3 +166,17 @@ def atf_main_wrapper(args: Sequence[str] = None):
         )
         print(METADATA_HEADER)
         print(metadatas)
+    else:
+        flags = []
+        if parsed_args.srcdir:
+            flags.extend(("--srcdir", parsed_args.srcdir))
+        if parsed_args.resfile:
+            flags.extend(("--resfile", parsed_args.resfile))
+
+        if parsed_args.config_vars:
+            environ.update(parsed_args.config_vars)
+
+        # TODO: Potential bug with scoping
+        flags.extend(("-k", parsed_args.test_case))
+
+        pytest.main(flags)
